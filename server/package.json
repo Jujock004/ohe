@@ -7,6 +7,7 @@
     "db:seed": "tsx ./bin/seed",
     "build": "tsx ./bin/migrate && tsc ./src/main --outDir ../dist --esModuleInterop",
     "start": "node ../dist/src/main",
+    "fix": "npx @biomejs/biome check --write .",
     "test": "jest --verbose"
   },
   "dependencies": {
