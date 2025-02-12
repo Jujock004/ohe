@@ -1,13 +1,29 @@
-.event-card {
-  border: 1px solid black;
+.event-card-image {
+  position: relative;
   border-radius: 10px;
-  padding: 16px;
   width: 80vw;
-  text-align: center;
+  height: 285px;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
 }
 
-.title-event-card {
+.event-card-overlay {
+  padding: 16px;
+  text-align: center;
+  position: absolute;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.title-event-card,
+.details-event-card,
+.participants-event-card {
   font-family: var(--title-font);
+  color: white;
 }
 
 .participants-event-card {

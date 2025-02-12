@@ -19,7 +19,7 @@ router.get("/api/events", eventActions.browse);
 router.get("/api/events/:id", eventActions.read);
 router.post("/api/events", eventActions.add);
 
-router.get("/api/items/event/:eventId", participationActions.readByEventId);
+router.get("/api/event/:eventId", participationActions.readByEventId);
 
 /* ************************************************************************* */
 

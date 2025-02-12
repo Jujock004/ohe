@@ -87,6 +87,7 @@ export default function Home() {
             date={event.date}
             location={event.location}
             participation={participation[event.id - 1]?.length}
+            image={event.image_url}
           />
         ))}
       </section>

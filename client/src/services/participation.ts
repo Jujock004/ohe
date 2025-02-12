@@ -8,7 +8,7 @@ export const fetchParticipation = async (
   eventId: number,
 ): Promise<Participation[]> => {
   const response = await fetch(
-    `${import.meta.env.VITE_API_URL}/api/items/event/${eventId}`,
+    `${import.meta.env.VITE_API_URL}/api/event/${eventId}`,
   );
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
