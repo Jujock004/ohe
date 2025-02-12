@@ -23,7 +23,7 @@ export default function BasicMenu() {
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
       >
-        <MenuIcon htmlColor="var(--secondary-color)" />
+        <MenuIcon htmlColor="var(--secondary-color)" fontSize="large" />
       </Button>
       <Menu
         id="basic-menu"
@@ -34,7 +34,14 @@ export default function BasicMenu() {
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem onClick={handleClose}>Liste des événements</MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            window.location.href = "/events";
+          }}
+        >
+          Liste des événements
+        </MenuItem>
         <MenuItem onClick={handleClose}>Profil</MenuItem>
         <MenuItem onClick={handleClose}>Logout</MenuItem>
       </Menu>

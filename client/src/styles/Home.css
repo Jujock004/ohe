@@ -13,10 +13,11 @@
 
 .title-intro-home {
   font-family: var(--title-font);
+  font-size: 1.6rem;
 }
 
 .text-intro-home {
-  font-size: 16px;
+  font-size: 1.1rem;
 }
 
 .events-home {

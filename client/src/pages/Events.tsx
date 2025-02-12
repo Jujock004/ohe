@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import EventCard from "../components/EventCard";
 import Header from "../components/Header";
-import "../styles/Home.css";
+import "../styles/Events.css";
 import Footer from "../components/Footer";
 import { fetchEvents } from "../services/event";
 import { fetchParticipation } from "../services/participation";
@@ -67,21 +67,12 @@ export default function Home() {
   return (
     <>
       <Header />
-      <div className="home">
-        <section className="intro-section">
-          <h1 className="title-intro-home">
-            Créons ensemble les moments qui comptent !
-          </h1>
-          <p className="text-intro-home">
-            Bienvenue sur OHE, la plateforme où chaque rencontre devient une
-            histoire à partager. Que vous souhaitiez organiser un événement ou
-            rejoindre une communauté passionnée, vous êtes au bon endroit.
-            <br /> Découvrez des événements uniques, rencontrez des personnes
-            inspirantes et créez des souvenirs inoubliables.
-          </p>
-        </section>
-        <section className="events-home">
-          {events.slice(0, 3)?.map((event) => (
+      <div className="events-list-page">
+        <h1 className="title-events-list-page">
+          Découvrez tous nos événements
+        </h1>
+        <section className="events-list">
+          {events?.map((event) => (
             <EventCard
               id={event.id}
               key={event.id}

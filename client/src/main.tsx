@@ -6,6 +6,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 /* ************************************************************************* */
 
 import App from "./App";
+import Events from "./pages/Events";
 // Import the main app component
 import Home from "./pages/Home";
 
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
       {
         path: "/", // The root path
         element: <Home />, // Renders the App component for the home page
+      },
+      {
+        path: "/events", // The root path
+        element: <Events />, // Renders the App component for the home page
       },
     ],
   },
