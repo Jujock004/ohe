@@ -6,6 +6,7 @@ interface Event {
   hour: string;
   date: string;
   location: string;
+  image_url: string;
 }
 
 export const fetchEvents = async (): Promise<Event[]> => {

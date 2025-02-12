@@ -3,6 +3,7 @@ import EventCard from "../components/EventCard";
 import Header from "../components/Header";
 import "../styles/Home.css";
 import { fetchEvents } from "../services/event";
+import { fetchParticipation } from "../services/participation";
 
 interface Event {
   id: number;
@@ -12,15 +13,35 @@ interface Event {
   hour: string;
   date: string;
   location: string;
+  image_url: string;
+}
+
+interface Participation {
+  id: number;
+  userId: number;
+  eventId: number;
 }
 
 export default function Home() {
   const [events, setEvents] = useState<Event[]>([]);
+  const [participation, setParticipation] = useState<Participation[][]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    setIsLoading(true);
+    fetchEvents()
+      .then((events) => {
+        setEvents(events);
+        return Promise.all(events.map((event) => fetchParticipation(event.id)));
+      })
+      .then((participations) => {
+        setParticipation(participations);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setError(error);
+      });
+
     fetchEvents()
       .then((events) => {
         setEvents(events);
@@ -57,15 +78,18 @@ export default function Home() {
           inspirantes et créez des souvenirs inoubliables.
         </p>
       </section>
-      {events?.map((event) => (
-        <EventCard
-          id={event.id}
-          key={event.id}
-          title={event.title}
-          date={event.date}
-          location={event.location}
-        />
-      ))}
+      <section className="events-home">
+        {events.slice(0, 3)?.map((event) => (
+          <EventCard
+            id={event.id}
+            key={event.id}
+            title={event.title}
+            date={event.date}
+            location={event.location}
+            participation={participation[event.id - 1]?.length}
+          />
+        ))}
+      </section>
     </div>
   );
 }

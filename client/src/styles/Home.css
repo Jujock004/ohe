@@ -18,3 +18,10 @@
 .text-intro-home {
   font-size: 16px;
 }
+
+.events-home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}

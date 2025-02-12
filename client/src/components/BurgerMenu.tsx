@@ -23,7 +23,7 @@ export default function BasicMenu() {
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
       >
-        <MenuIcon />
+        <MenuIcon htmlColor="var(--secondary-color)" />
       </Button>
       <Menu
         id="basic-menu"

@@ -1,0 +1,15 @@
+.event-card {
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 16px;
+  width: 80vw;
+  text-align: center;
+}
+
+.title-event-card {
+  font-family: var(--title-font);
+}
+
+.participants-event-card {
+  color: var(--primary-color);
+}
