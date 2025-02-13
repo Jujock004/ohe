@@ -1,5 +1,6 @@
 // Load the express module to create a web application
 
+import cookieParser from "cookie-parser";
 import express from "express";
 
 const app = express();
@@ -21,7 +22,14 @@ const app = express();
 import cors from "cors";
 
 if (process.env.CLIENT_URL != null) {
-  app.use(cors({ origin: [process.env.CLIENT_URL] }));
+  app.use(
+    cors({
+      origin: process.env.CLIENT_URL || "http://localhost:3000",
+      credentials: true,
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+    }),
+  );
 }
 
 // If you need to allow extra origins, you can add something like this:
@@ -56,6 +64,7 @@ app.use(express.json());
 app.use(express.urlencoded());
 // app.use(express.text());
 // app.use(express.raw());
+app.use(cookieParser());
 
 /* ************************************************************************* */
 
@@ -121,8 +130,5 @@ const logErrors: ErrorRequestHandler = (err, req, res, next) => {
 app.use(logErrors);
 
 /* ************************************************************************* */
-
-import cookieParser from "cookie-parser";
-app.use(cookieParser());
 
 export default app;

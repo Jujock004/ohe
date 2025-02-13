@@ -14,3 +14,7 @@ header {
 body {
   margin-top: 60px;
 }
+
+.avatar-and-menu {
+  display: flex;
+}

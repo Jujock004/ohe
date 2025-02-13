@@ -1,14 +1,20 @@
+import LoginRoundedIcon from "@mui/icons-material/LoginRounded";
+import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
+import ManageAccountsRoundedIcon from "@mui/icons-material/ManageAccountsRounded";
 import MenuIcon from "@mui/icons-material/Menu";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import * as React from "react";
+import { useAuth } from "../contexts/AuthContext";
+import { auth } from "../services/auth";
 import LoginModal from "./LoginModal";
 
 export default function BurgerMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [modalOpen, setModalOpen] = React.useState(false);
   const open = Boolean(anchorEl);
+  const { user, setUser } = useAuth();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -16,6 +22,17 @@ export default function BurgerMenu() {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await auth.logout();
+      setUser(null);
+      handleClose();
+      window.location.reload();
+    } catch (error) {
+      console.error("Erreur lors de la déconnexion:", error);
+    }
   };
 
   const handleModalOpen = () => {
@@ -36,7 +53,7 @@ export default function BurgerMenu() {
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
       >
-        <MenuIcon htmlColor="var(--secondary-color)" fontSize="large" />
+        <MenuIcon htmlColor="black" fontSize="large" />
       </Button>
       <Menu
         id="basic-menu"
@@ -55,7 +72,35 @@ export default function BurgerMenu() {
         >
           Liste des événements
         </MenuItem>
-        <MenuItem onClick={handleModalOpen}>Se connecter</MenuItem>
+        {!user ? (
+          <MenuItem
+            sx={{ display: "flex", gap: "8px" }}
+            onClick={handleModalOpen}
+          >
+            <LoginRoundedIcon sx={{ color: "text.secondary" }} />
+            Se connecter
+          </MenuItem>
+        ) : (
+          <>
+            <MenuItem
+              sx={{ display: "flex", gap: "8px" }}
+              onClick={() => {
+                handleClose();
+                window.location.href = "/events";
+              }}
+            >
+              <ManageAccountsRoundedIcon sx={{ color: "text.secondary" }} />
+              Profil
+            </MenuItem>
+            <MenuItem
+              onClick={handleLogout}
+              sx={{ display: "flex", gap: "8px" }}
+            >
+              <LogoutRoundedIcon sx={{ color: "text.secondary" }} />
+              Déconnexion
+            </MenuItem>
+          </>
+        )}
       </Menu>
       <LoginModal open={modalOpen} onClose={handleModalClose} />
     </div>

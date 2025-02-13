@@ -25,7 +25,7 @@ class AuthRepository {
 
   async readById(id: number) {
     const [rows] = await databaseClient.query<Rows>(
-      "select id, pseudo, email, avatar_url, from user where id = ?",
+      "select id, pseudo, email, avatar_url from user where id = ?",
       [id],
     );
     return rows[0] as Omit<User, "password"> | undefined;

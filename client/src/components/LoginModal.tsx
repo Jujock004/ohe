@@ -1,6 +1,9 @@
 import { Box, Modal, TextField, styled } from "@mui/material";
 import Button from "@mui/material/Button";
 import { createTheme } from "@mui/material/styles";
+import { useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
+import { auth } from "../services/auth";
 
 const StyledModal = styled(Box)({
   position: "absolute",
@@ -28,6 +31,16 @@ interface LoginModalProps {
 }
 
 export default function LoginModal({ open, onClose }: LoginModalProps) {
+  const { setUser } = useAuth();
+  const [isLogin, setIsLogin] = useState(true);
+  const [error, setError] = useState("");
+  const [formData, setFormData] = useState({
+    pseudo: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
   const theme = createTheme({
     palette: {
       primary: {
@@ -39,6 +52,45 @@ export default function LoginModal({ open, onClose }: LoginModalProps) {
     },
   });
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+    setError("");
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      if (isLogin) {
+        const userData = await auth.login({
+          email: formData.email,
+          password: formData.password,
+        });
+        setUser(userData.user);
+      } else {
+        if (formData.password !== formData.confirmPassword) {
+          setError("Les mots de passe ne correspondent pas");
+          return;
+        }
+        await auth.register({
+          pseudo: formData.pseudo,
+          email: formData.email,
+          password: formData.password,
+        });
+      }
+      onClose();
+      window.location.reload();
+    } catch (error) {
+      setError(
+        error instanceof Error ? error.message : "Une erreur est survenue",
+      );
+    }
+  };
+
   return (
     <Modal
       open={open}
@@ -47,24 +99,61 @@ export default function LoginModal({ open, onClose }: LoginModalProps) {
       aria-describedby="modal-modal-description"
     >
       <StyledModal>
-        <h2 id="modal-modal-title">Se connecter</h2>
-        <FormContainer onSubmit={(e) => e.preventDefault()}>
+        <h2 id="modal-modal-title">
+          {isLogin ? "Se connecter" : "Inscrivez-vous"}
+        </h2>
+        {error && (
+          <p style={{ color: "red", margin: "10px 0", fontSize: "14px" }}>
+            {error}
+          </p>
+        )}
+        <FormContainer onSubmit={handleSubmit}>
+          {!isLogin && (
+            <TextField
+              required
+              name="pseudo"
+              label="Pseudo"
+              type="text"
+              variant="outlined"
+              value={formData.pseudo}
+              onChange={handleChange}
+              fullWidth
+            />
+          )}
           <TextField
             required
-            id="email"
+            name="email"
             label="Email"
             type="email"
             variant="outlined"
+            value={formData.email}
+            onChange={handleChange}
             fullWidth
           />
           <TextField
             required
-            id="password"
+            name="password"
             label="Mot de passe"
             type="password"
             variant="outlined"
+            value={formData.password}
+            onChange={handleChange}
             fullWidth
+            autoComplete="current-password"
           />
+          {!isLogin && (
+            <TextField
+              required
+              name="confirmPassword"
+              label="Confirmer le mot de passe"
+              type="password"
+              variant="outlined"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              fullWidth
+              autoComplete="new-password"
+            />
+          )}
           <Button
             type="submit"
             variant="contained"
@@ -80,7 +169,7 @@ export default function LoginModal({ open, onClose }: LoginModalProps) {
               },
             }}
           >
-            Connexion
+            {isLogin ? "Connexion" : "Inscription"}
           </Button>
         </FormContainer>
         <p
@@ -90,10 +179,41 @@ export default function LoginModal({ open, onClose }: LoginModalProps) {
             fontSize: "14px",
           }}
         >
-          Vous n'avez pas de compte ?{" "}
-          <a href="/signup" style={{ color: "primary" }}>
-            Inscrivez-vous
-          </a>
+          {isLogin ? (
+            <>
+              Vous n'avez pas de compte ?{" "}
+              <button
+                type="button"
+                style={{
+                  color: "blue",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  padding: 0,
+                }}
+                onClick={() => setIsLogin(false)}
+              >
+                Inscrivez-vous
+              </button>
+            </>
+          ) : (
+            <>
+              Vous avez déjà un compte ?{" "}
+              <button
+                type="button"
+                style={{
+                  color: "blue",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  padding: 0,
+                }}
+                onClick={() => setIsLogin(true)}
+              >
+                Se connecter
+              </button>
+            </>
+          )}
         </p>
       </StyledModal>
     </Modal>

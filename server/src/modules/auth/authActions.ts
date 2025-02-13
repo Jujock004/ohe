@@ -49,7 +49,13 @@ const logout: RequestHandler = async (req, res) => {
 };
 
 const verify: RequestHandler = async (req, res) => {
-  res.json({ message: "Utilisateur authentifié", user: req.user });
+  try {
+    res.json({
+      user: req.user,
+    });
+  } catch (err) {
+    res.status(401).json({ message: "Non authentifié" });
+  }
 };
 
 const register: RequestHandler = async (req, res, next) => {

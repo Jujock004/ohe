@@ -74,8 +74,9 @@ export default function Home() {
           </h1>
           <p className="text-intro-home">
             Bienvenue sur OHE, la plateforme où chaque rencontre devient une
-            histoire à partager. Que vous souhaitiez organiser un événement ou
-            rejoindre une communauté passionnée, vous êtes au bon endroit.
+            histoire à partager. <br />
+            Que vous souhaitiez organiser un événement ou rejoindre une
+            communauté passionnée, vous êtes au bon endroit.
             <br /> Découvrez des événements uniques, rencontrez des personnes
             inspirantes et créez des souvenirs inoubliables.
           </p>
