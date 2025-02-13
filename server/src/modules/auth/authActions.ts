@@ -1,6 +1,6 @@
 import type { RequestHandler } from "express";
-import authRepository from "./authRepository";
 import jwt from "jsonwebtoken";
+import authRepository from "./authRepository";
 
 const login: RequestHandler = async (req, res, next) => {
   try {

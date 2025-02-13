@@ -6,12 +6,12 @@ const router = express.Router();
 // Define Your API Routes Here
 /* ************************************************************************* */
 
+import authActions from "./modules/auth/authActions";
+import { verifyToken } from "./modules/auth/authMiddleware";
 // Define item-related routes
 import eventActions from "./modules/event/eventActions";
 import itemActions from "./modules/item/itemActions";
 import participationActions from "./modules/participation/participationActions";
-import authActions from "./modules/auth/authActions";
-import { verifyToken } from "./modules/auth/authMiddleware";
 
 router.get("/api/items", itemActions.browse);
 router.get("/api/items/:id", itemActions.read);
