@@ -53,6 +53,35 @@ class ParticipationRepository {
     return rows as Participation[];
   }
 
+  async isRegistered(eventId: number, userId: number) {
+    const [rows] = await databaseClient.query<Rows>(
+      "select * from participation where event_id = ? and user_id = ?",
+      [eventId, userId],
+    );
+    return rows.length > 0;
+  }
+
+  async register(eventId: number, userId: number) {
+    const isAlreadyRegistered = await this.isRegistered(eventId, userId);
+    if (isAlreadyRegistered) {
+      throw new Error("Already registered to this event");
+    }
+
+    const [result] = await databaseClient.query<Result>(
+      "insert into participation (event_id, user_id) values (?, ?)",
+      [eventId, userId],
+    );
+    return result.insertId;
+  }
+
+  async unregister(eventId: number, userId: number) {
+    const [result] = await databaseClient.query<Result>(
+      "delete from participation where event_id = ? and user_id = ?",
+      [eventId, userId],
+    );
+    return result.affectedRows > 0;
+  }
+
   // The U of CRUD - Update operation
   // TODO: Implement the update operation to modify an existing participation
 

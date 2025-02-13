@@ -9,7 +9,9 @@ import "../styles/EventDetails.css";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
+import { useAuth } from "../contexts/AuthContext";
 import { stringAvatar } from "../services/stringAvatar";
+import { registerToEvent } from "../services/user";
 
 type Event = {
   id: number;
@@ -33,10 +35,14 @@ type User = {
 
 export default function EventDetails() {
   const { id } = useParams<{ id: string }>();
+  const { user, isLoading: isAuthLoading } = useAuth();
   const [event, setEvent] = useState<Event>();
-
   const [host, setHost] = useState<User>();
+  const [isRegistered, setIsRegistered] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
+  // Récupérer l'événement et l'hôte
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/api/events/${id}`)
       .then((response) => response.json())
@@ -49,8 +55,75 @@ export default function EventDetails() {
       .then((response) => response.json())
       .then((data: User) => {
         setHost(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching event details:", error);
+        setError("Erreur lors du chargement de l'événement");
       });
   }, [id]);
+
+  // Vérifier l'inscription si l'utilisateur est connecté
+  useEffect(() => {
+    if (!event?.id || !user) return;
+
+    fetch(
+      `${import.meta.env.VITE_API_URL}/api/events/${event.id}/is-registered`,
+      {
+        credentials: "include",
+      },
+    )
+      .then((response) => {
+        if (!response.ok)
+          throw new Error("Erreur lors de la vérification de l'inscription");
+        return response.json();
+      })
+      .then((data) => {
+        setIsRegistered(data.registered);
+      })
+      .catch((error) => {
+        console.error("Error checking registration:", error);
+      });
+  }, [event?.id, user]);
+
+  const handleRegister = async () => {
+    if (!event?.id || !user) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      if (!isRegistered) {
+        await registerToEvent({
+          id: event.id,
+          data: { event_id: event.id, user_id: user.id },
+        });
+        setIsRegistered(true);
+      } else {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/events/${event.id}/unregister`,
+          {
+            method: "DELETE",
+            credentials: "include",
+          },
+        );
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.message || "Erreur lors de la désinscription");
+        }
+
+        setIsRegistered(false);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Une erreur est survenue");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (isAuthLoading) {
+    return <div>Chargement...</div>;
+  }
 
   return (
     <>
@@ -81,19 +154,31 @@ export default function EventDetails() {
             <ul className="event-details-list">
               <li className="event-time">
                 <AccessTimeRoundedIcon />
-                {event && formatTime(event?.hour)}
+                {formatTime(event?.hour)}
               </li>
               <li className="event-date">
                 <CalendarMonthRoundedIcon />
-                {event && formatDate(event?.date)}
+                {formatDate(event?.date)}
               </li>
               <li className="event-location">
                 <LocationOnRoundedIcon />
                 {event?.location}
               </li>
             </ul>
-            <button type="button" className="event-register-btn">
-              Je m'inscris
+            {error && <div className="error-message">{error}</div>}
+            <button
+              type="button"
+              className={`event-register-btn ${isRegistered ? "registered" : ""}`}
+              onClick={handleRegister}
+              disabled={isLoading || !user}
+            >
+              {!user
+                ? "Connectez-vous pour participer"
+                : isLoading
+                  ? "Chargement..."
+                  : isRegistered
+                    ? "Se désinscrire"
+                    : "Je m'inscris"}
             </button>
           </div>
         </div>

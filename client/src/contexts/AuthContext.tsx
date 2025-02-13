@@ -19,7 +19,10 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
+    let isMounted = true;
+
     const checkAuth = async () => {
       try {
         const response = await fetch(
@@ -29,27 +32,44 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           },
         );
 
+        if (!isMounted) return;
+
         if (response.ok) {
           const data = await response.json();
           setUser(data.user);
         } else {
+          // En cas d'erreur 401, on ne considère pas ça comme une erreur
+          // C'est juste que l'utilisateur n'est pas connecté
           setUser(null);
         }
       } catch (error) {
         console.error("Erreur de vérification d'authentification:", error);
+        // En cas d'erreur, on considère l'utilisateur comme déconnecté
+        if (isMounted) {
+          setUser(null);
+        }
       } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     };
 
     checkAuth();
-  }, []);
 
-  return (
-    <AuthContext.Provider value={{ user, setUser, isLoading }}>
-      {children}
-    </AuthContext.Provider>
-  );
+    // Cleanup function pour éviter les mises à jour sur un composant démonté
+    return () => {
+      isMounted = false;
+    };
+  }, []); // On ne lance la vérification qu'une seule fois au montage
+
+  const value = {
+    user,
+    setUser,
+    isLoading,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
