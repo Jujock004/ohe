@@ -24,6 +24,10 @@
   position: absolute;
   width: 100%;
   background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .title-event-card,
@@ -35,4 +39,90 @@
 
 .participants-event-card {
   color: var(--primary-color);
+}
+
+.discover-button {
+  width: fit-content;
+  display: inline-block;
+  text-decoration: none;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #ffb800;
+  color: #1b1b1b;
+  border: none;
+  border-radius: 2rem;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.3s ease;
+  font-family: "Lato", sans-serif;
+  font-weight: regular;
+  cursor: pointer;
+}
+
+.discover-button:hover {
+  background-color: #e94e1b;
+  color: white;
+  box-shadow: 0 0 0 2px rgba(233, 78, 27, 0.3);
+}
+
+.discover-button:active {
+  transform: translateY(2px);
+}
+
+.button-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+  white-space: nowrap; /* Empêche le texte de se wrapper */
+}
+
+.arrow-icon {
+  width: 1rem;
+  height: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.discover-button:hover .arrow-icon {
+  transform: translateX(4px);
+}
+
+.discover-button::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  background: rgba(233, 78, 27, 0.1);
+  transform: translate(-50%, -50%) scale(0);
+  border-radius: 50%;
+  transition: transform 0.5s ease-out;
+}
+
+.discover-button:hover::after {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.event-card-overlay {
+  height: auto;
+  min-height: 60px;
+  transition: all 5s ease;
+}
+
+.event-card-overlay .details-event-card,
+.event-card-overlay .participants-event-card {
+  opacity: 0;
+  height: 0;
+  transition: opacity 0.3s ease-in;
+}
+
+.event-card-overlay:hover .details-event-card,
+.event-card-overlay:hover .participants-event-card {
+  opacity: 1;
+  height: auto;
+}
+
+.event-card-overlay:hover {
+  height: 100%;
 }

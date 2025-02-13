@@ -1,13 +1,14 @@
 import LoginRoundedIcon from "@mui/icons-material/LoginRounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import ManageAccountsRoundedIcon from "@mui/icons-material/ManageAccountsRounded";
-import MenuIcon from "@mui/icons-material/Menu";
+import { Avatar } from "@mui/material";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import * as React from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { auth } from "../services/auth";
+import { stringAvatar } from "../services/stringAvatar";
 import LoginModal from "./LoginModal";
 
 export default function BurgerMenu() {
@@ -53,7 +54,9 @@ export default function BurgerMenu() {
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
       >
-        <MenuIcon htmlColor="black" fontSize="large" />
+        <Avatar {...stringAvatar(user?.pseudo)}>
+          {user?.pseudo.charAt(0).toUpperCase()}
+        </Avatar>
       </Button>
       <Menu
         id="basic-menu"

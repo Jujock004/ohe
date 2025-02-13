@@ -1,4 +1,6 @@
 footer {
+  font-family: var(--text-font);
+  font-weight: 600;
   text-align: center;
   padding: 30px;
   background-color: var(--secondary-color);
