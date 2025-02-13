@@ -52,8 +52,8 @@ app.use(
 
 // Uncomment one or more of these options depending on the format of the data sent by your client:
 
-// app.use(express.json());
-// app.use(express.urlencoded());
+app.use(express.json());
+app.use(express.urlencoded());
 // app.use(express.text());
 // app.use(express.raw());
 
@@ -121,5 +121,8 @@ const logErrors: ErrorRequestHandler = (err, req, res, next) => {
 app.use(logErrors);
 
 /* ************************************************************************* */
+
+import cookieParser from "cookie-parser";
+app.use(cookieParser());
 
 export default app;
