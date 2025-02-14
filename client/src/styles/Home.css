@@ -26,3 +26,15 @@
   align-items: center;
   gap: 30px;
 }
+
+@media (min-width: 768px) {
+  .events-home {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+  .title-intro-home {
+    font-size: 2.5rem;
+  }
+}

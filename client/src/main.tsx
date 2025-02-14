@@ -10,6 +10,7 @@ import EventDetails from "./pages/EventDetails";
 import Events from "./pages/Events";
 // Import the main app component
 import Home from "./pages/Home";
+import MyProfile from "./pages/MyProfile";
 
 // Import additional components for new routes
 // Try creating these components in the "pages" folder
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: "/events/:id",
         element: <EventDetails />,
+      },
+      {
+        path: "/profile",
+        element: <MyProfile />,
       },
     ],
   },

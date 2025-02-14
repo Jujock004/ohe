@@ -139,6 +139,16 @@ const isRegistered: RequestHandler = async (req, res, next) => {
   }
 };
 
+const readByParticipant: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = Number(req.params.userId);
+    const events = await participationRepository.readByParticipant(userId);
+    res.json(events);
+  } catch (err) {
+    next(err);
+  }
+};
+
 export default {
   browse,
   read,
@@ -147,4 +157,5 @@ export default {
   register,
   isRegistered,
   unregister,
+  readByParticipant,
 };

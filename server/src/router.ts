@@ -25,12 +25,22 @@ router.post("/api/users", userActions.add);
 router.get("/api/events", eventActions.browse);
 router.get("/api/events/:id", eventActions.read);
 router.post("/api/events", eventActions.add);
+router.delete("/api/events/:id", eventActions.destroy);
+router.get("/api/events/user/:userId", eventActions.readByOrganizer);
 
 router.get("/api/event/:eventId", participationActions.readByEventId);
 
 router.get("/api/participations", participationActions.browse);
 router.get("/api/participations/:id", participationActions.read);
+router.get(
+  "/api/events/:eventId/participants",
+  participationActions.readByEventId,
+);
 router.post("/api/participations", participationActions.add);
+router.get(
+  "/api/participations/user/:userId",
+  participationActions.readByParticipant,
+);
 
 router.post(
   "/api/events/:id/register",

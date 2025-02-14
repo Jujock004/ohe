@@ -15,3 +15,12 @@
   align-items: center;
   gap: 30px;
 }
+
+@media (min-width: 768px) {
+  .events-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+}

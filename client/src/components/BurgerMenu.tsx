@@ -30,7 +30,7 @@ export default function BurgerMenu() {
       await auth.logout();
       setUser(null);
       handleClose();
-      window.location.reload();
+      window.location.href = "/";
     } catch (error) {
       console.error("Erreur lors de la déconnexion:", error);
     }
@@ -89,7 +89,7 @@ export default function BurgerMenu() {
               sx={{ display: "flex", gap: "8px" }}
               onClick={() => {
                 handleClose();
-                window.location.href = "/events";
+                window.location.href = "/profile";
               }}
             >
               <ManageAccountsRoundedIcon sx={{ color: "text.secondary" }} />

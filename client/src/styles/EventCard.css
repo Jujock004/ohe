@@ -126,3 +126,59 @@
 .event-card-overlay:hover {
   height: 100%;
 }
+
+@media screen and (min-width: 1024px) {
+  .event-card-image {
+    width: 300px;
+    height: 400px;
+  }
+
+  .event-card-overlay {
+    padding: 20px;
+  }
+
+  .title-event-card {
+    font-size: 1.2rem;
+  }
+
+  .details-event-card,
+  .participants-event-card {
+    font-size: 1rem;
+  }
+
+  .discover-button {
+    padding: 0.7rem 1.2rem;
+    font-size: 1rem;
+  }
+}
+
+.delete-button {
+  position: absolute !important;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  transition: all 0.3s ease !important;
+}
+
+.delete-button:hover {
+  background-color: rgba(244, 67, 54, 0.9) !important;
+  transform: scale(1.1);
+}
+
+.delete-button .MuiSvgIcon-root {
+  color: #e94e1b;
+  transition: color 0.3s ease;
+}
+
+.delete-button:hover .MuiSvgIcon-root {
+  color: white;
+}
+
+.delete-button:disabled {
+  background-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+.delete-button:disabled .MuiSvgIcon-root {
+  color: rgba(0, 0, 0, 0.26);
+}

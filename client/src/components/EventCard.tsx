@@ -2,14 +2,20 @@ import { ArrowRight } from "@mui/icons-material";
 import "../styles/EventCard.css";
 import { Link } from "react-router-dom";
 import { formatDate } from "../services/formatDate";
+import { IconButton } from "@mui/material";
+import { useState } from "react";
+import { deleteEvent } from "../services/event";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 interface EventCardProps {
   id: number;
   title: string;
   date: string;
   location: string;
-  participation: number | 0;
   image: string;
+  participation: number;
+  isOrganizer?: boolean;
+  onDelete?: () => void;
 }
 
 export default function EventCard({
@@ -17,9 +23,30 @@ export default function EventCard({
   title,
   date,
   location,
-  participation,
   image,
+  participation,
+  isOrganizer,
+  onDelete,
 }: EventCardProps) {
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer cet événement ?")) {
+      try {
+        setIsDeleting(true);
+        await deleteEvent(id);
+        if (onDelete) {
+          onDelete();
+        }
+      } catch (error) {
+        console.error("Erreur lors de la suppression:", error);
+        alert("Erreur lors de la suppression de l'événement");
+      } finally {
+        setIsDeleting(false);
+      }
+    }
+  };
+
   return (
     <div
       className="event-card-image"
@@ -41,6 +68,18 @@ export default function EventCard({
           </span>
         </Link>
       </div>
+      {isOrganizer && (
+        <IconButton
+          onClick={handleDelete}
+          disabled={isDeleting}
+          className="delete-button"
+          color="error"
+          size="small"
+          aria-label="supprimer l'événement"
+        >
+          <DeleteIcon />
+        </IconButton>
+      )}
     </div>
   );
 }

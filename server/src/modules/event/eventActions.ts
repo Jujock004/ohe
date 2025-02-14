@@ -17,6 +17,23 @@ const browse: RequestHandler = async (req, res, next) => {
   }
 };
 
+// The D of BREAD - Delete operation
+const destroy: RequestHandler = async (req, res, next) => {
+  try {
+    // Extract the event ID from the request parameters
+    const eventId = Number(req.params.id);
+
+    // Delete the event
+    await eventRepository.delete(eventId);
+
+    // Respond with HTTP 204 (No Content)
+    res.sendStatus(204);
+  } catch (err) {
+    // Pass any errors to the error-handling middleware
+    next(err);
+  }
+};
+
 // The R of BREAD - Read operation
 const read: RequestHandler = async (req, res, next) => {
   try {
@@ -48,6 +65,7 @@ const add: RequestHandler = async (req, res, next) => {
       hour: req.body.hour,
       date: req.body.date,
       location: req.body.location,
+      image_url: req?.body.image_url,
     };
 
     // Create the event
@@ -61,4 +79,34 @@ const add: RequestHandler = async (req, res, next) => {
   }
 };
 
-export default { browse, read, add };
+const readByUserId: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = Number(req.params.userId);
+    const events = await eventRepository.readByUserId(userId);
+
+    if (!events.length) {
+      res.sendStatus(404);
+    } else {
+      res.json(events);
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+const readByOrganizer: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = Number(req.params.userId);
+    const events = await eventRepository.readByUserId(userId);
+
+    if (!events.length) {
+      res.json([]); // Retourner un tableau vide au lieu de 404
+    } else {
+      res.json(events);
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+export default { browse, read, add, readByUserId, destroy, readByOrganizer };

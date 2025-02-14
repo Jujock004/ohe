@@ -1,5 +1,5 @@
 import { Avatar } from "@mui/material";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
@@ -9,7 +9,9 @@ import "../styles/EventDetails.css";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
+import LoginModal from "../components/LoginModal";
 import { useAuth } from "../contexts/AuthContext";
+import { readByEventId } from "../services/participation";
 import { stringAvatar } from "../services/stringAvatar";
 import { registerToEvent } from "../services/user";
 
@@ -36,11 +38,21 @@ type User = {
 export default function EventDetails() {
   const { id } = useParams<{ id: string }>();
   const { user, isLoading: isAuthLoading } = useAuth();
-  const [event, setEvent] = useState<Event>();
   const [host, setHost] = useState<User>();
   const [isRegistered, setIsRegistered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const [event, setEvent] = useState<Event>();
+  const [participantsCount, setParticipantsCount] = useState<number>(0);
+
+  const handleModalOpen = () => {
+    setModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
 
   // Récupérer l'événement et l'hôte
   useEffect(() => {
@@ -61,6 +73,19 @@ export default function EventDetails() {
         setError("Erreur lors du chargement de l'événement");
       });
   }, [id]);
+
+  // Récupère le nombre de participants
+  useEffect(() => {
+    if (!event?.id) return;
+
+    readByEventId(event.id)
+      .then((participants) => {
+        setParticipantsCount(participants.length);
+      })
+      .catch((error) => {
+        console.error("Error fetching participants:", error);
+      });
+  }, [event?.id]);
 
   // Vérifier l'inscription si l'utilisateur est connecté
   useEffect(() => {
@@ -165,12 +190,15 @@ export default function EventDetails() {
                 {event?.location}
               </li>
             </ul>
+            <p className="event-participants">
+              {participantsCount} participant{participantsCount > 1 ? "s" : ""}
+            </p>
             {error && <div className="error-message">{error}</div>}
             <button
               type="button"
               className={`event-register-btn ${isRegistered ? "registered" : ""}`}
-              onClick={handleRegister}
-              disabled={isLoading || !user}
+              onClick={!user ? handleModalOpen : handleRegister}
+              disabled={isLoading}
             >
               {!user
                 ? "Connectez-vous pour participer"
@@ -183,6 +211,7 @@ export default function EventDetails() {
           </div>
         </div>
       )}
+      <LoginModal open={modalOpen} onClose={handleModalClose} />
       <Footer />
     </>
   );

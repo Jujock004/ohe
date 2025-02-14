@@ -1,0 +1,44 @@
+.event-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 8px;
+  padding: 24px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-title {
+  text-align: center;
+  margin-bottom: 20px !important;
+}
+
+.event-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+}
+
+.cancel-button,
+.submit-button {
+  padding: 8px !important;
+}
+
+/* Style pour rendre les champs de date et heure plus lisibles sur mobile */
+input[type="date"],
+input[type="time"] {
+  height: 40px;
+  padding: 8px;
+}

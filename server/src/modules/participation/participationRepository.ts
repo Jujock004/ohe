@@ -82,6 +82,24 @@ class ParticipationRepository {
     return result.affectedRows > 0;
   }
 
+  async readByParticipant(userId: number) {
+    const [rows] = await databaseClient.query<Rows>(
+      "select e.* from event e inner join participation p on e.id = p.event_id where p.user_id = ?",
+      [userId],
+    );
+
+    return rows as Event[];
+  }
+
+  async readByUserId(userId: number) {
+    const [rows] = await databaseClient.query<Rows>(
+      "SELECT * FROM event WHERE user_id = ?",
+      [userId],
+    );
+
+    return rows as Event[];
+  }
+
   // The U of CRUD - Update operation
   // TODO: Implement the update operation to modify an existing participation
 
