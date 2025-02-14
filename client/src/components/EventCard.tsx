@@ -1,11 +1,11 @@
 import { ArrowRight } from "@mui/icons-material";
 import "../styles/EventCard.css";
-import { Link } from "react-router-dom";
-import { formatDate } from "../services/formatDate";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { deleteEvent } from "../services/event";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { formatDate } from "../services/formatDate";
 
 interface EventCardProps {
   id: number;
